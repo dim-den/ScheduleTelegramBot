@@ -9,6 +9,7 @@ import pytz
 import os, sys
 import database
 import logger
+import time
 from database import User
 
 from telebot import types
@@ -260,5 +261,16 @@ def callback(message):
 		bot.reply_to(message, 'Что-то пошло не так :/ Попробуйте команду /help')
 		logger.error("{0}|{1}|{2}: {3} - ERROR_MSG: {4}".format(message.chat.username, message.chat.first_name,message.chat.last_name, message.text, e))
 
-# RUN
-bot.polling(none_stop=True)
+def main():
+	try:
+		bot.infinity_polling(timeout=10, long_polling_timeout=5)
+		# bot.polling(none_stop=True)
+
+	except Exception as e:
+		logger.error("INTERNAL ERROR - ERROR_MSG: {0}".format(e))
+		time.sleep(15)
+
+if __name__ == '__main__':
+	main()
+
+

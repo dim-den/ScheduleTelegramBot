@@ -1,7 +1,7 @@
 import sqlite3
 import os
 
-lesson_time = ['08.00-9.35', '09.50-11.25', '11.40-13.15', '13.50-15.25', '15.40-17.15', '17.30-19.05', '19.20-20.55']
+lesson_time = ['08.00-09.20', '09.35-10.55', '11.25-12.45', '13.00-14.20', '14.35-15.55', '16.10-17.30', '17.45-19.05']
 day_number = {'понедельник' : 0, 'вторник' : 1, 'среда' : 2, 'четверг' : 3, 'пятница' : 4, 'суббота' : 5  }
 eng_ru = {'monday' : 'понедельник', 'tuesday' : 'вторник', 'wednesday' : 'среда', 'thursday' : 'четверг', 'friday' : 'пятница', 'saturday' : 'суббота' }
 
@@ -20,13 +20,22 @@ def getfile(filename):
 	script_directory = os.path.dirname(os.path.abspath(__file__))
 	return os.path.join(script_directory, filename)
 
+def getusers():
+	conn = sqlite3.connect(getfile('users.db'))
+	cursor = conn.cursor()
+
+	sqlselect = '''SELECT * FROM user'''
+
+	cursor.execute(sqlselect)
+
+	return cursor.fetchall()
 
 def getschedule(course, idgroup, subgroup, week_day, week):
 	conn = sqlite3.connect(getfile('schedule.db'))
 	cursor = conn.cursor()
 
 	sqlselect = '''SELECT * FROM TIMETABLE WHERE course = ? AND idgroup = ? AND subgroup = ? 
-											AND week_day = ?  AND week = ?'''
+											AND week_day = ?  AND week = (?) ORDER BY lesson_number'''
 
 	cursor.execute(sqlselect, (course, idgroup, subgroup, week_day, week))
 
